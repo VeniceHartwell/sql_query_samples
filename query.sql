@@ -1,38 +1,39 @@
-# Begin with the correct database
+-- THe comments above each query highlight the MAIN TOPIC in uppercase letters.
+# Begin with the correct DATABASE.
 USE sakila;
 
-# Get all films which title ends with APOLLO.
+# REGEX: Selecting all films with titles ending in APOLLO.
 SELECT TITLE FROM FILM WHERE TITLE REGEXP "APOLLO$";
 
-# Get all films with word DATE in the title.
+# REGEX: Selecting all films with word DATE in the title.
 SELECT TITLE FROM FILM WHERE TITLE REGEXP '\\bDATE\\b';
 
-# Get 10 films with the longest title.
+# CHECKING LENGTH: Selecting the 10 films with the longest title.
 SELECT TITLE, LENGTH(TITLE) FROM FILM order by LENGTH(title) DESC limit 10;
 
-# A new person is hired to help Jon. Her name is TAMMY SANDERS, and she is a customer. Update the database accordingly.
+# INSERT INTO: Updating database to insert customer TAMMY SANDERS as an employee, who now helps Jon.
 SELECT * FROM STAFF WHERE FIRST_NAME='JON';
 SELECT * FROM CUSTOMER WHERE FIRST_NAME='TAMMY';
 INSERT INTO STAFF (STAFF_ID, FIRST_NAME, LAST_NAME, ADDRESS_ID, EMAIL, STORE_ID, ACTIVE, USERNAME, PASSWORD, LAST_UPDATE) VALUES (3,'TAMMY', 'SANDERS', 79, 'TAMMY.SANDERS@sakilacustomer.org', 2, 1, 'TAMMY', NULL, '2006-02-15 04:57:20');
 
-# Delete the non active users from the table customer
+# DELETING non-active users from the table customer.
 SET FOREIGN_KEY_CHECKS=0;
 DELETE FROM customer WHERE active = 0;
 SET FOREIGN_KEY_CHECKS=1;
 
-# How many copies of the film _Hunchback Impossible_ exist in the inventory system?
+# JOIN + WHERE: Counting how many copies of the film _Hunchback Impossible_ exist in the inventory system.
 SELECT  film.title, count(inventory.film_id)
 	FROM inventory
 	JOIN film
 	ON film.film_id = inventory.film_id
 	WHERE film.title = "Hunchback Impossible";
     
-# List all films whose length is longer than the average of all the films.
+# LENGTH ABOVE AVERAGE: Selecting all films with a length longer than the average film length.
 SELECT title, length
 	FROM film
 	HAVING length > (SELECT AVG(length) FROM film);
     
-# Use subqueries to display all actors who appear in the film _Alone Trip_.
+# SUBQUERY: Displaying all actors in the film "Alone Trip".
 SELECT * FROM (
 		SELECT  actor.first_name, actor.last_name
 		FROM film
@@ -42,7 +43,7 @@ SELECT * FROM (
 		ON actor.actor_id = film_actor.actor_id
 		WHERE film.title = "Alone Trip") as table2;
         
-# Sales have been lagging among young families, and you wish to target all family movies for a promotion. Identify all movies categorized as family films.
+# JOIN WHERE: Selecting all family films.
 SELECT title
 	FROM film
 	JOIN film_category
@@ -51,8 +52,7 @@ SELECT title
 		ON film_category.category_id = category.category_id
 		WHERE category.name = "Family";
         
-# Get name and email from customers from Canada using subqueries. Do the same with joins. 
-# Note that to create a join, you will have to identify the correct tables with their primary keys and foreign keys, that will help you get the relevant information.
+# SUBQUERY + JOIN: Selecting customers from Canada.
 SELECT *
 	FROM (Select concat_ws(" ",customer.first_name, customer.last_name) as `name`, customer.email as email, country.country
 		FROM customer
@@ -64,8 +64,7 @@ SELECT *
 				ON city.country_id = country.country_id
 				WHERE country = "Canada") as table3;
 
-# Which are films starred by the most prolific actor? Most prolific actor is defined as the actor that has acted in the most number of films. 
-# First you will have to find the most prolific actor and then use that actor_id to find the different films that he/she starred.
+# MULTIPLE JOINS + SORT: Selecting all films starred by the most prolific actor (who has acted in the most number of films). 
 SELECT actor.first_name, actor.last_name, film.title
 	FROM film
 	JOIN film_actor
@@ -79,12 +78,12 @@ SELECT actor.first_name, actor.last_name, film.title
 			LIMIT 1) as table4
 			ON table4.actor_id = film_actor.actor_id;
             
-# Films rented by most profitable customer. 
-# You can use the customer table and payment table to find the most profitable customer ie the customer that has made the largest sum of payments
+# JOINS: Selecting films rented by the most profitable customer. 
 SELECT  customer_id, sum(amount) as amount
 		FROM payment
 		GROUP BY customer_id
         order by amount desc;
+        
 SELECT customer.customer_id, first_name, last_name, film.title
 	from customer
     join rental
@@ -95,12 +94,28 @@ SELECT customer.customer_id, first_name, last_name, film.title
 	on inventory.film_id = film.film_id
     where customer.customer_id = "526";
     
-# Get the `client_id` and the `total_amount_spent` of those clients who spent more than the average of the `total_amount` spent by each client.
+# HAVING: Selecting the `client_id` and the `total_amount_spent` of those clients who spent more than the average of the `total_amount` spent by each client.
 SELECT customer_id, avg(total_amount)
 	from (SELECT customer_id, sum(amount) as total_amount
 	FROM payment
 	Group by customer_id) as rowas;
+    
 SELECT customer_id, sum(amount) as total_amount
 	FROM payment
 	Group by customer_id
 	HAVING total_amount > 112.54;
+    
+-- OTHER QUERY FUNCTIONS I WOULD LIKE TO FIND A REASON TO USE:
+-- WINDOW
+-- EXISTS https://www.codewars.com/kata/58113a64e10b53ec36000293
+-- POSITION https://www.codewars.com/kata/59401e0e54a655a298000040
+-- JOIN and RANK https://www.codewars.com/kata/58094559c47d323ebd000035
+-- UNION ALL https://www.codewars.com/kata/58112f8004adbbdb500004fe
+-- IN
+SELECT id, name
+FROM departments
+WHERE id IN (
+  SELECT department_id
+  FROM sales
+  WHERE price > 98
+);
