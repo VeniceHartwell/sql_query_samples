@@ -95,7 +95,7 @@ SELECT customer.customer_id, first_name, last_name, film.title
 	on inventory.film_id = film.film_id
     where customer.customer_id = "526";
     
-# HAVING: Selecting the `client_id` and the `total_amount_spent` of those clients who spent more than the average of the `total_amount` spent by each client.
+# HAVING: Selecting the 'client_id' and the 'total_amount_spent' of those clients who spent more than the average of the 'total_amount' spent by each client.
 SELECT customer_id, avg(total_amount)
 	from (SELECT customer_id, sum(amount) as total_amount
 	FROM payment
@@ -105,4 +105,31 @@ SELECT customer_id, sum(amount) as total_amount
 	FROM payment
 	Group by customer_id
 	HAVING total_amount > 112.54;
-    
+
+# JOIN + RANK: RANKING the top film stores by customer, by JOINING several tables and COUNTING all GROUPED customers.
+SELECT s.store_id, COUNT(c.customer_id) customer_count,
+  RANK() OVER(ORDER BY COUNT(c.customer_id) DESC) store_rank
+FROM store s
+JOIN customer c ON c.store_id = s.store_id
+GROUP BY s.store_id
+ORDER BY store_rank;
+
+# UNION ALL: UNIONING 'staff' and 'customer' tables and using REGEX (LIKE) 
+# to find all names starting with 'T' in each store's database.
+SELECT first_name, 'Staff' AS name FROM STAFF
+WHERE first_name LIKE "T%"
+UNION ALL 
+SELECT first_name, 'Customer' AS name FROM customer
+WHERE first_name LIKE "T%";
+
+# IN + DISTINCT: SELECTING all films WHERE actor 'JENNIFER' is IN the film 
+# (similar to a JOIN) and only returning DISTINCT names (no duplicates).
+SELECT DISTINCT(f.title)
+FROM film_actor fa
+JOIN film f ON f.film_id = fa.film_id -- (to display title)
+WHERE fa.film_id IN (
+  SELECT a.actor_id
+  FROM actor a
+  WHERE a.first_name LIKE 'JENNIFER'
+);
+
