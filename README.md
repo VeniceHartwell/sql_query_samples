@@ -34,3 +34,7 @@ UNION is used to join several tables that are similar, but not the same, by form
 
 ### A full list
 of queries made in this project can be found in the SQL file listed above. Other examples include WINDOW, POSITION, and EXISTS functions.
+
+## ER Diagram
+An Entity Relationship Diagram, or ERD, displays the relationships between a database in a visually appealing format. THis makes it easy to explain a company's data to non-programmers and new engineers. The ERD for this project is posted below.
+![ERD_SCREENSHOT](https://github.com/VeniceHartwell/sql_query_samples/blob/main/images/ER_Diagram_Sakila.png)
