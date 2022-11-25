@@ -32,8 +32,16 @@ IN is a clause used to find data in another table and filter out unecessary data
 ![UNION SCREENSHOT](https://github.com/VeniceHartwell/sql_query_samples/blob/main/images/UNION_ALL.png)
 UNION is used to join several tables that are similar, but not the same, by formatting any data that isn't the same in special 'unioned' columns.
 
-### A full list
-of queries made in this project can be found in the SQL file listed above. Other examples include WINDOW, POSITION, and EXISTS functions.
+## 7. WINDOW
+![WINDOW SCREENSHOT](https://github.com/VeniceHartwell/sql_query_samples/blob/main/images/WINDOW.png)
+WINDOW is used to work with data that has to change over the process of the query. It is used commonly to calculate rolling averages or to total sales figures over time.
+
+## 8. EXIST
+![EXIST SCREENSHOT](https://github.com/VeniceHartwell/sql_query_samples/blob/main/images/EXIST_results.png)
+EXIST is used to return only data that exists somewhere else in the database. If you need to search for customers that EXIST in a certain country, this function works well.
+
+### A full list of queries
+that were not included in this README can be found in this [SQL file](https://github.com/VeniceHartwell/sql_query_samples/blob/main/query.sql).
 
 ## ER Diagram
 An Entity Relationship Diagram, or ERD, displays the relationships between a database in a visually appealing format. THis makes it easy to explain a company's data to non-programmers and new engineers. The ERD for this project is posted below.
