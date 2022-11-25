@@ -122,7 +122,7 @@ UNION ALL
 SELECT first_name, 'Customer' AS name FROM customer
 WHERE first_name LIKE "T%";
 
-# IN + DISTINCT: SELECTING all films WHERE actor 'JENNIFER' is IN the film 
+# IN + DISTINCT: SELECTING all films WHERE the actress 'JENNIFER' is IN the film 
 # (similar to a JOIN) and only returning DISTINCT names (no duplicates).
 SELECT DISTINCT(f.title)
 FROM film_actor fa
@@ -133,3 +133,21 @@ WHERE fa.film_id IN (
   WHERE a.first_name LIKE 'JENNIFER'
 );
 
+# EXISTS: SELECTING all US cities that EXIST in the database.
+SELECT city.city, COUNT(city.city)
+FROM city
+JOIN country c ON c.country_id = city.country_id
+WHERE EXISTS (
+  SELECT * 
+  FROM country c
+  WHERE c.country_id = city.country_id AND c.country = 'United States')
+GROUP BY city.city
+ORDER BY city.city ASC;
+
+# POSITION: SELECTING the POSITION of the decimal in a film's replacement cost.
+SELECT title, replacement_cost, 
+	POSITION('.' in replacement_cost) AS comma
+FROM film
+ORDER BY comma;
+
+# WINDOW: 
