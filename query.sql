@@ -150,4 +150,21 @@ SELECT title, replacement_cost,
 FROM film
 ORDER BY comma;
 
-# WINDOW: 
+# WINDOW: SUMMING the number of films that have been released yearly since 2006.
+SELECT SUM(release_year) OVER (
+	PARTITION BY film_id, release_year
+    ORDER BY release_year
+	) AS release_count
+FROM film;
+
+# There was only one release year!
+SELECT DISTINCT(release_year) FROM film;
+
+# WINDOW: SUMMING the number of customers added to the database over time.
+SELECT DISTINCT(create_date) FROM customer;
+SELECT create_date, SUM(create_date) OVER (
+	PARTITION BY create_date
+    ORDER BY create_date
+	) AS num_created
+FROM customer
+GROUP BY create_date;
